@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 public class WordAndPunctuationParser implements TextParser {
     private final TextParser letterParser = new LetterParser();
     private static final String WORD_REGEX = "[А-я\\w]+";
-    private static final String WORD_OR_PUNCTUATION_REGEX = "[[А-я\\w]+)(\\p{Punct}(“)(”)]";
+    private static final String WORD_OR_PUNCTUATION_REGEX = "([\\wа-яА-ЯёЁ]+)|(\\p{Punct})";
 
     @Override
     public TextComposite parse(String data) {
