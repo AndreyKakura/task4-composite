@@ -3,44 +3,31 @@ package com.kakura.task4.service.impl;
 import com.kakura.task4.entity.ComponentType;
 import com.kakura.task4.entity.TextComponent;
 import com.kakura.task4.entity.TextComposite;
-import com.kakura.task4.exception.TextException;
 import com.kakura.task4.parser.TextParser;
 import com.kakura.task4.parser.impl.ParagraphParser;
-import com.kakura.task4.parser.impl.SentenceParser;
-import com.kakura.task4.reader.TextReader;
-import com.kakura.task4.reader.impl.TextReaderImpl;
 import com.kakura.task4.service.TextService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class TextServiceImplTest {
     private TextService textService;
     private TextParser paragraphParser;
-    private TextReader reader;
-    private TextComponent textComponent;
 
     @BeforeEach
-    void setUp() throws TextException {
+    void setUp() {
         textService = new TextServiceImpl();
         paragraphParser = new ParagraphParser();
-        reader = new TextReaderImpl();
-        textComponent = new TextComposite(ComponentType.TEXT);
-        textComponent.add(paragraphParser.parse(reader.read("src/test/resources/data/testtext.txt")));
     }
 
     @AfterEach
     void tearDown() {
         textService = null;
         paragraphParser = null;
-        textComponent = null;
     }
 
     @Test
@@ -88,8 +75,32 @@ class TextServiceImplTest {
         String testString = "\tVeryveryverylongword something. Sentence.\n\tVeryveryverylongword another thing. Something. Something.\n\tSentence.";
         TextComponent testComponent = new TextComposite(ComponentType.TEXT);
         testComponent.add(paragraphParser.parse(testString));
-        Map<String, Integer> sameWords = textService.countSameWords(testComponent);
-        System.out.println(sameWords);
-       //Map<String, Integer> expected = Map.of({)
+        Map<String, Integer> actualMap = textService.countSameWords(testComponent);
+        Map<String, Integer> expectedMap = new HashMap<>();
+        expectedMap.put("sentence", 2);
+        expectedMap.put("veryveryverylongword", 2);
+        expectedMap.put("something", 3);
+
+        assertEquals(expectedMap, actualMap);
+    }
+
+    @Test
+    void countVowelLetters() {
+        String testString = "\tПредложение. Eще одно.\n\tSentence. Another sentence.";
+        TextComponent testComponent = new TextComposite(ComponentType.TEXT);
+        testComponent.add(paragraphParser.parse(testString));
+        long actual = textService.countVowelLetters(testComponent);
+        long expected = 18;
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void countConsonantLetters() {
+        String testString = "\tПредложение. Eще одно.\n\tSentence. Another sentence.";
+        TextComponent testComponent = new TextComposite(ComponentType.TEXT);
+        testComponent.add(paragraphParser.parse(testString));
+        long actual = textService.countConsonantLetters(testComponent);
+        long expected = 23;
+        assertEquals(actual, expected);
     }
 }

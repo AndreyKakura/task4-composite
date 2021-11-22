@@ -11,8 +11,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class TextServiceImpl implements TextService {
-    private static final String VOWEL_REGEX = "(?iu)[aeiouyаеёионыэюя]";
-    private static final String CONSONANT_REGEX = "(?iu)[a-zа-я&&[^aeiouyаеёионыэюя]]";
+    private static final String VOWEL_REGEX = "(?iu)[aeiouyаеёиоыэюя]";
+    private static final String CONSONANT_REGEX = "(?iu)[a-zа-я&&[^aeiouyаеёиоыэюя]]";
 
     @Override
     public List<TextComponent> sortParagraphsBySentenceAmount(TextComponent textComponent) {
@@ -52,24 +52,43 @@ public class TextServiceImpl implements TextService {
     @Override
     public Map<String, Integer> countSameWords(TextComponent textComponent) {
         Map<String, Integer> sameWords = textComponent.getChildren().stream()
-                .flatMap(p -> p.getChildren().stream())
-                .flatMap(s -> s.getChildren().stream())
-                .flatMap(lx -> lx.getChildren().stream().filter(w -> !(w instanceof Punctuation)))
-                .map(w -> w.toString().toLowerCase())
-                .collect(Collectors.toMap(s -> s, i -> 1, (i1, i2) -> i1 + i2));
-
-
-        Map<String, Integer> otherWords = textComponent.getChildren().stream()
-                .flatMap(p -> p.getChildren().stream())
-                .flatMap(s -> s.getChildren().stream())
-                .flatMap(lx -> lx.getChildren().stream())
+                .flatMap(paragraph -> paragraph.getChildren().stream())
+                .flatMap(sentence -> sentence.getChildren().stream())
+                .flatMap(lexeme -> lexeme.getChildren().stream())
                 .flatMap(word -> word.getChildren().stream())
-                .map(w -> w.toString().toLowerCase())
-                .collect(Collectors.toMap(s -> s, i -> 1, (i1, i2) -> i1 + i2));
+                .filter(w -> !(w instanceof Punctuation))
+                .map(l -> l.toString().toLowerCase())
+                .collect(Collectors.toMap(w -> w, i -> 1, (i1, i2) -> i1 + i2));
 
-        otherWords.values().removeIf(i -> i == 1);
+        sameWords.values().removeIf(i -> i == 1);
 
-        return otherWords;
+        return sameWords;
+    }
+
+    @Override
+    public long countVowelLetters(TextComponent textComponent) {
+        return textComponent.getChildren().stream()
+                .flatMap(paragraph -> paragraph.getChildren().stream())
+                .flatMap(sentence -> sentence.getChildren().stream())
+                .flatMap(lexeme -> lexeme.getChildren().stream())
+                .flatMap(word -> word.getChildren().stream())
+                .filter(w -> !(w instanceof Punctuation))
+                .flatMap(letter -> letter.getChildren().stream())
+                .map(l -> l.toString())
+                .filter(l -> l.matches(VOWEL_REGEX)).count();
+    }
+
+    @Override
+    public long countConsonantLetters(TextComponent textComponent) {
+        return textComponent.getChildren().stream()
+                .flatMap(paragraph -> paragraph.getChildren().stream())
+                .flatMap(sentence -> sentence.getChildren().stream())
+                .flatMap(lexeme -> lexeme.getChildren().stream())
+                .flatMap(word -> word.getChildren().stream())
+                .filter(w -> !(w instanceof Punctuation))
+                .flatMap(letter -> letter.getChildren().stream())
+                .map(l -> l.toString())
+                .filter(l -> l.matches(CONSONANT_REGEX)).count();
     }
 
     private int findLengthOfLongestWord(TextComponent textComponent) {

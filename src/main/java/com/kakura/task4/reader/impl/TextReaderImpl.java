@@ -18,7 +18,7 @@ public class TextReaderImpl implements TextReader {
     public String read(String textPath) throws TextException {
         Path path = Paths.get(textPath);
 
-        if(!Files.exists(path)) {
+        if (!Files.exists(path)) {
             logger.error("File does not exist");
             throw new TextException("File does not exist");
         }
@@ -30,7 +30,7 @@ public class TextReaderImpl implements TextReader {
         } catch (IOException e) {
             logger.error("IOException");
             throw new TextException("IOException", e);
-        }   
+        }
 
         return text;
     }

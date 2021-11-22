@@ -1,1 +1,1 @@
-2021-11-16 13:57:11 [main] [main] [10] INFO  com.kakura.task4.main.Main - test
+2021-11-22 06:28:25 [main] [getChildren] [38] ERROR com.kakura.task4.entity.Punctuation - Operation "getChildren" is not available for punctuation

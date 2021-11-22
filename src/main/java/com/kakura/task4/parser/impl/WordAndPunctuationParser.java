@@ -21,16 +21,16 @@ public class WordAndPunctuationParser implements TextParser {
         Pattern pattern = Pattern.compile(WORD_OR_PUNCTUATION_REGEX);
         Matcher matcher = pattern.matcher(data);
 
-        while(matcher.find()) {
+        while (matcher.find()) {
             String group = matcher.group();
             Pattern wordPattern = Pattern.compile(WORD_REGEX);
             Matcher wordMatcher = wordPattern.matcher(group);
 
-            if(wordMatcher.matches()) {
+            if (wordMatcher.matches()) {
                 TextComponent wordComponent = letterParser.parse(group);
                 wordComposite.add(wordComponent);
             } else {
-                TextComponent punctuationComponent = new Punctuation(ComponentType.PUNCTUATION,group.charAt(0));
+                TextComponent punctuationComponent = new Punctuation(ComponentType.PUNCTUATION, group.charAt(0));
                 wordComposite.add(punctuationComponent);
             }
         }

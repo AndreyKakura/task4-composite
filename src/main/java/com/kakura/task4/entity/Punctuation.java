@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
-public class Punctuation implements TextComponent{
+public class Punctuation implements TextComponent {
     private static final Logger logger = LogManager.getLogger();
 
     private ComponentType componentType;

@@ -12,7 +12,7 @@ public class LetterParser implements TextParser {
     public TextComposite parse(String data) {
         TextComposite letterComposite = new TextComposite(ComponentType.LETTER);
         char[] letters = data.toCharArray();
-        for(char letter: letters) {
+        for (char letter : letters) {
             TextComponent letterComponent = new Letter(ComponentType.LETTER, letter);
             letterComposite.add(letterComponent);
         }

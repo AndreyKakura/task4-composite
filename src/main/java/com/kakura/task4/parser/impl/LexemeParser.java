@@ -17,7 +17,7 @@ public class LexemeParser implements TextParser {
         String[] lexemes = data.split(LEXEME_DELIMITER_REGEX);
 
         for (String lexeme : lexemes) {
-            if(!lexeme.equals("")){
+            if (!lexeme.equals("")) {
                 TextComponent lexemeComponent = wordAndPunctuationParser.parse(lexeme);
                 lexemeComposite.add(lexemeComponent);
             }
